@@ -7,7 +7,7 @@ black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
 
-ball = pygame.image.load(r"C:\Users\User\OneDrive\Рабочий стол\python_pr\MyGames\simple_ones\images\ball.jpg")
+ball = pygame.image.load(r"C:\Users\User\OneDrive\Рабочий стол\python_pr\MyGames\simple_ones\data\ball.jpg")
 ballrect = ball.get_rect()
 
 while 1:
