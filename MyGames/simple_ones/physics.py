@@ -1,4 +1,3 @@
-from turtle import speed
 import pygame as pg
 pg.init()
 
@@ -40,7 +39,7 @@ while going:
             going = False
     
     pressed = pg.key.get_pressed()
-    key_map(pressed, Vx, Vy)
+    speed = key_map(pressed, Vx, Vy)
     
     if ballrect.left < 0 or ballrect.right > width:
         speed[0] = -speed[0]
@@ -48,7 +47,7 @@ while going:
         speed[1] = -speed[1]
     
     screen.blit(background, (0, 0)) 
-    pg.draw.rect(screen, color, ballrect)
+    screen.blit(ball, (0, 0))
         
     pg.display.flip()
     fps.tick(60)

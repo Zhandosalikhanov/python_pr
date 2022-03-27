@@ -9,13 +9,16 @@ def rotate(screen, image, angle, pos, pivot):
     screen.blit(rotated_image, rect)
 
 def main():
-    dim = width, height = 1400, 1050
+    dim = width, height = 400, 300
     screen = pg.display.set_mode(dim)
     screen.fill((0, 128, 0))
     
-    clock = pg.image.load('data/clock.jpeg').convert_alpha()
+    red = pg.Color('red')
+    
+    clock = pg.image.load('data/clock.png').convert_alpha()
     min = pg.image.load('data/min.png').convert_alpha()
     sec = pg.image.load('data/sec.png').convert_alpha()
+    red_line = pg.image.load('data/red.jpg')
             
     min_pos = [(width/2), (height/2)]
     sec_pos = [(width/2), (height/2)]
