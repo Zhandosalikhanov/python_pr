@@ -1,5 +1,6 @@
 import pygame as pg
 from datetime import datetime
+import math
 
 def rotate(screen, image, angle, pos, pivot):
     
@@ -13,16 +14,13 @@ def main():
     screen = pg.display.set_mode(dim)
     screen.fill((0, 128, 0))
     
-    clock = pg.image.load('data/clock.jpeg').convert_alpha()
+    clock = pg.image.load('data/clock.png')
     min = pg.image.load('data/min.png').convert_alpha()
     sec = pg.image.load('data/sec.png').convert_alpha()
             
     min_pos = [(width/2), (height/2)]
     sec_pos = [(width/2), (height/2)]
 
-    min_pivot = pg.math.Vector2(0, min.get_size()[1] / 2)
-    sec_pivot = pg.math.Vector2(0, sec.get_size()[1] / 2)
-    
     going = True
     fps = pg.time.Clock()
     
@@ -38,6 +36,8 @@ def main():
 
         min_angle = (int(cur_min) - 30) * 6
         sec_angle = (int(cur_sec) - 30) * 6
+        min_pivot = pg.math.Vector2(0, min.get_size()[1] / 2)
+        sec_pivot = pg.math.Vector2(math.cos(sec_angle), (sec.get_size()[1] / 2))
         
         rotate(screen, min, min_angle, min_pos, min_pivot)
         rotate(screen, sec, sec_angle, sec_pos, sec_pivot)
