@@ -1,5 +1,6 @@
 import os
 import pygame as pg
+import random
 
 if not pg.font:
     print("Error: Fonts disabled")
@@ -70,7 +71,7 @@ class Chimp(pg.sprite.Sprite):
         screen = pg.display.get_surface()
         self.area = screen.get_rect()
         self.rect.topleft = 10, 90
-        self.move = 18
+        self.move = 20
         self.dizzy = False
 
     def update(self):
@@ -82,8 +83,12 @@ class Chimp(pg.sprite.Sprite):
     def _walk(self):
         newPos = self.rect.move((self.move, 0))
         if not self.area.contains(newPos):
-            if self.rect.left < self.area.left or self.rect.right > self.area.right:
-                self.move = -self.move
+            if self.rect.left < self.area.left:
+                self.move = random.random() * 100
+                newPos = self.rect.move((self.move, 0))
+                self.image = pg.transform.flip(self.image, True, False)
+            if self.rect.right > self.area.right:
+                self.move = -random.random() * 100
                 newPos = self.rect.move((self.move, 0))
                 self.image = pg.transform.flip(self.image, True, False)
         self.rect = newPos
@@ -108,7 +113,7 @@ class Chimp(pg.sprite.Sprite):
 if __name__ == '__main__':
     pg.init()
 
-    screen = pg.display.set_mode((1500, 500), pg.SCALED)
+    screen = pg.display.set_mode((1500 * 2, 500))
     pg.display.set_caption("Monke! Monke! Monke!")
     pg.mouse.set_visible(False)
 
