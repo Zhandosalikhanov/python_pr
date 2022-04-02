@@ -37,6 +37,8 @@ def main():
         if ballrect.top < 0 or ballrect.bottom > (h - 102):
            Vy *= -1
         
+        ballrect.move_ip(Vx, Vy)
+        
         fps.tick(60)
         surface.blit(wall, (0, 0))
         surface.blit(ball, ballrect)
