@@ -20,16 +20,16 @@ WHITE = (255, 255, 255)
 #Other Variables for use in the program
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SPEED = 5
+ENEMY_SPEED = 5
+PLAYER_SPEED = 5
 SCORE = 0
 MONEY = 0
 
 #Setting up Fonts
-font = pg.font.SysFont("Verdana", 60)
-font_small = pg.font.SysFont("Verdana", 20)
-game_over = font.render("Game Over", True, BLACK)
+font_small = pg.font.SysFont("Verdana", 35)
+my_font = pg.font.SysFont("Verdana", 25)
 
-background = pg.image.load("images/AnimatedStreet.png")
+background = pg.image.load("images/bcg.png")
 
 #Create a white screen 
 DISPLAYSURF = pg.display.set_mode((400,600))
@@ -46,13 +46,22 @@ class Coin(pg.sprite.Sprite):
     def move(self):
         self.rect.move_ip(0,6)
         if (self.rect.bottom > 600):
-            self.rect.top = 0
-            self.rect.center = (random.randint(40,SCREEN_WIDTH-40), random.randint(40, (SCREEN_HEIGHT // 2) - 50))
+            self.rect.center = (random.randint(40,SCREEN_WIDTH-40), -random.randint(300, 1600))
 
     def new(self):
-        if rand
-        self.rect.top = 0
-            
+        self.rect.center = (random.randint(40,SCREEN_WIDTH-40), -random.randint(300, 1600))
+
+class Button(pg.sprite.Sprite):
+    def __init__(self, name, pos):
+        super().__init__()
+        self.image = pg.image.load('images/' + name + '.png')
+        self.rect = self.image.get_rect()
+        self.pos = pos
+        self.rect.center = pos
+
+    def clicked(self, mouse):
+        return self.rect.collidepoint(mouse)
+
 class Enemy(pg.sprite.Sprite):
       def __init__(self):
         super().__init__() 
@@ -62,12 +71,11 @@ class Enemy(pg.sprite.Sprite):
 
       def move(self):
         global SCORE
-        self.rect.move_ip(0,SPEED)
+        self.rect.move_ip(0,ENEMY_SPEED)
         if (self.rect.bottom > 600):
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
-
 
 class Player(pg.sprite.Sprite):
     def __init__(self):
@@ -81,10 +89,10 @@ class Player(pg.sprite.Sprite):
         
         if self.rect.left > 0:
               if pressed_keys[K_LEFT]:
-                  self.rect.move_ip(-5, 0)
+                  self.rect.move_ip(-PLAYER_SPEED, 0)
         if self.rect.right < SCREEN_WIDTH:        
               if pressed_keys[K_RIGHT]:
-                  self.rect.move_ip(5, 0)
+                  self.rect.move_ip(PLAYER_SPEED, 0)
                   
 
 #Setting up Sprites        
@@ -100,13 +108,11 @@ coins = pg.sprite.Group()
 coins.add(C1)
 
 all_sprites = pg.sprite.Group()
-all_sprites.add(P1)
-all_sprites.add(E1)
-all_sprites.add(C1)
+all_sprites.add(P1, E1, C1)
 
 #Adding a new User event 
-INC_SPEED = pg.USEREVENT + 1
-pg.time.set_timer(INC_SPEED, 1000)
+INC_ENEMY_SPEED = pg.USEREVENT + 1
+pg.time.set_timer(INC_ENEMY_SPEED, 2000)
 
 #Songs
 songs = ['songs/GasGasGas.mp3', 'songs/Rampant.mp3']
@@ -119,32 +125,50 @@ while True:
       
     #Cycles through all events occuring  
     for event in pg.event.get():
-        if event.type == INC_SPEED:
-              SPEED += 0.5      
+        if event.type == INC_ENEMY_SPEED:
+              ENEMY_SPEED += 0.2     
+        
+        if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            Next = True
+            cur_song += 1
+
         if event.type == QUIT:
             pg.quit()
             sys.exit()
 
+    #Music Stuff
     if pg.mixer.music.get_pos() / 1000 > song_s[cur_song % 2]:
         cur_song += 1
         Next = True
     
-    if not pg.mixer.music.get_busy() and Next:
+    if Next:
         Next = False
         pg.mixer.music.load(songs[cur_song])
         pg.mixer.music.play()
     
+    #Displaying Score and Money
     DISPLAYSURF.blit(background, (0,0))
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
     money = font_small.render(str(MONEY), True, pg.Color('yellow'))
-    DISPLAYSURF.blit(money, (SCREEN_WIDTH - 20, 10))
+    DISPLAYSURF.blit(money, (SCREEN_WIDTH - 40, 10))
+    speed = my_font.render('SPEED: ' + str(PLAYER_SPEED), True, pg.Color('red'))
+    DISPLAYSURF.blit(speed, (SCREEN_WIDTH - 120, 40))
+
+    #Speed-boost for money
+    if MONEY == 5:
+        PLAYER_SPEED = 7
+    elif MONEY == 10:
+        PLAYER_SPEED = 9
+    elif MONEY == 15:
+        PLAYER_SPEED = 12
 
     #Moves and Re-draws all Sprites
     for entity in all_sprites:
         entity.move()
         DISPLAYSURF.blit(entity.image, entity.rect)
-        
+
+    #To be run when coin collected    
     if pg.sprite.spritecollideany(P1, coins):
         pg.mixer.Sound('sounds/coin.wav').play()
         MONEY += 1
@@ -153,18 +177,11 @@ while True:
         
     #To be run if collision occurs between Player and Enemy
     if pg.sprite.spritecollideany(P1, enemies):
-          pg.mixer.Sound('sounds/crash.wav').play()
-          time.sleep(1)
-                   
-          DISPLAYSURF.fill(RED)
-          DISPLAYSURF.blit(game_over, (30,250))
-          
-          pg.display.update()
-          for entity in all_sprites:
-                entity.kill() 
-          time.sleep(2)
-          pg.quit()
-          sys.exit()        
+        pg.mixer.Sound('sounds/crash.wav').play()
+        pg.mixer.music.stop()
+        time.sleep(1)
+        pg.quit()
+        sys.exit()
         
     pg.display.update()
     FramePerSec.tick(FPS)
