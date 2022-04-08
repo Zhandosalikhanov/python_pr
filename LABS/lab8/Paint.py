@@ -1,4 +1,5 @@
 import pygame as pg
+from math import *
 
 # Class for tools and colors
 class Button(pg.sprite.Sprite):
@@ -49,25 +50,32 @@ def main():
     # Loading imgages
     Pencil = pg.image.load('images/Pencil.png').convert_alpha()
     Eraser = pg.image.load('images/Eraser.png').convert_alpha()
+    Plus = pg.image.load('images/Plus.png').convert_alpha()
+    Minus = pg.image.load('images/Minus.png').convert_alpha()
     
     # Making tool objects
     Pencil = Button(Pencil, (220, 0))
     Eraser = Button(Eraser, (240, 0))
+    Plus = Button(Plus, (260, 0))
+    Minus = Button(Minus, (280, 0))
     
     # Making Groups
     colors = pg.sprite.Group(Color())
-    all_sprites = pg.sprite.Group([Pencil, Eraser, Color()])
+    all_sprites = pg.sprite.Group([Pencil, Eraser, Color(), Plus, Minus])
     
     # Variables
     cur_color = pg.Color('black')
     cur_tool = 'Pen'
     Pen_Draw = False
+    Erase = False
+    Pen_width = 5
+    dx, dy = 0, 0
     
     # Main Loop
     fps = pg.time.Clock()
     going = True
     while going:
-        
+        scr.fill(pg.Color('gray'), pg.Rect(0, 0, width, 20))
         # Loop for checking events
         for e in pg.event.get():
             if e.type == pg.QUIT:
@@ -75,26 +83,42 @@ def main():
             
             # Check if any color was picked
             if e.type == pg.MOUSEBUTTONDOWN:
+                if Eraser.clicked(e.pos):
+                    cur_tool = 'Erase'
+
+                if Pencil.clicked(e.pos):
+                    cur_tool = 'Pen'
+                
+                if Plus.clicked(e.pos): Pen_width += 3
+                if Minus.clicked(e.pos): Pen_width -= 3
+
                 if cur_tool == 'Pen':
                     Pen_Draw = True
                     for c in colors:
                         if c.clicked(pg.mouse.get_pos()):
                             cur_color = pg.Color(c.image.get_at((11, 10)))
+
+                elif cur_tool == 'Erase':
+                    Erase = True
                             
             if e.type == pg.MOUSEBUTTONUP:
-                if cur_tool == 'Pen':
-                    Pen_Draw = False
+                Pen_Draw = False
+                Erase = False
+
+            if e.type == pg.MOUSEMOTION:
+                dx, dy = e.pos
                             
         if Pen_Draw == True:
-            # pg.draw.rect(scr, cur_color, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1], 5, 5))
-            pg.draw.circle(scr, cur_color, pg.mouse.get_pos(), 5)
-            # pg.draw.line(scr, cur_color, )
+            pg.draw.circle(scr, cur_color, (dx, dy), Pen_width)
+        
+        if Erase:
+            pg.draw.circle(scr, pg.Color('white'), (dx, dy), 3 * Pen_width)
         
         # Blit all tools and colors
         for c in all_sprites:
             c.blit(scr)
         
-        # Update screen    
+        # Update screen  
         pg.display.flip()
         fps.tick(120)
 
