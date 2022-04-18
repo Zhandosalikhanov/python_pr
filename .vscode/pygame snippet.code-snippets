@@ -32,6 +32,6 @@
 		  "    main()",
 		  "    pg.quit()"
 		],
-		"description": ""
+		"description": "pygame template"
 	  }
 }
