@@ -1,0 +1,16 @@
+
+You can type following commands in the PhoneBook
+
+help = Show instructions again
+q = Exit
+show = Show existing tables
+
+cr = Create table
+del = Delete table
+v = Select and view the table
+
+ins = Insert data into the table
+up = Upload from csv
+
+ch = Change
+del_col = Delete column by
