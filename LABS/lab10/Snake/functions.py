@@ -51,68 +51,6 @@ def connect():
             conn.close()
             print('Database connection closed.')
 
-# Function to Create new table      
-def CreateTable(name):
-    # Commands as list
-    command = f"""CREATE TABLE {name} (
-            name TEXT PRIMARY KEY,
-            score INT,
-            level INT
-        )"""
-    
-    conn = None
-    
-    try:
-        # read the connection parameters
-        params = config()
-        # connect to the PostgreSQL server
-        conn = ps.connect(**params)
-        cur = conn.cursor()
-        # create table
-        cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
-        
-        # Print success
-        print(f"Successfully created table {name}")
-        
-    except (Exception, ps.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-
-# Function to Delete table             
-def DeleteTable(name):
-    # Commands as list
-    command = f"""DROP TABLE {name}"""
-    
-    conn = None
-    
-    try:
-        # read the connection parameters
-        params = config()
-        # connect to the PostgreSQL server
-        conn = ps.connect(**params)
-        cur = conn.cursor()
-        # create table
-        cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
-        
-        # Print success
-        print(f"Successfully deleted {name} table")
-        
-    except (Exception, ps.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-
 # Function to insert the data into the table
 def InsertData(name, score= 0, level= 1, table= 'snake'):
     
@@ -143,7 +81,7 @@ def InsertData(name, score= 0, level= 1, table= 'snake'):
         if conn is not None:
             conn.close()
 
-# Function to Change the username or the number
+# Function to Change the data
 def ChangeData(name, score, level, table= 'snake'):
     
     # Commands
@@ -167,70 +105,6 @@ def ChangeData(name, score, level, table= 'snake'):
         
         # Print success
         print(f"Successfully changed {name} score to {score} and level to {level}")
-        
-    except (Exception, ps.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            
-# Function to Delete row      
-def DeleteData(name, table):
-    
-    delete_data = f"""DELETE FROM {table}
-                        WHERE name = '{name}'"""
-                
-    conn = None
-    try:
-        # read database configuration
-        params = config()
-        # connect to the PostgreSQL database
-        conn = ps.connect(**params)
-        # create a new cursor
-        cur = conn.cursor()
-        # execute the DELETE statement
-        cur.execute(delete_data)
-        # commit the changes to the database
-        conn.commit()
-        # close communication with the database
-        cur.close()
-        
-        # Print success
-        print(f"Successfully deleted {name} user")
-        
-    except (Exception, ps.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            
-# Function to show existing tables 
-def show():
-    
-    comand = """SELECT table_name FROM information_schema.tables
-       WHERE table_schema = 'public'"""
-    
-    conn = None
-    try:
-        # read database configuration
-        params = config()
-        # connect to the PostgreSQL database
-        conn = ps.connect(**params)
-        # create a new cursor
-        cur = conn.cursor()
-        # execute the INSERT statement
-        cur.execute(comand)
-        # write the contents
-        result = cur.fetchall()
-        # close communication with the database
-        cur.close()
-        
-        # Print Success
-        if len(result):
-            print(result)
-            print("You are seeing existing tables")
-        else:
-            print("No tables exist")
         
     except (Exception, ps.DatabaseError) as error:
         print(error)
