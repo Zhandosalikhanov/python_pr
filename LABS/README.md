@@ -5,53 +5,60 @@
 ## Lab 1
 
 **Topics covered in this lab work:**
-ejudge
+
+* ejudge
 
 ## Lab 2
 
 **Topics covered in this lab work:**
-ejudge 2
+
+* ejudge 2
 
 ## Lab 3
 
 **Topics covered in this lab work:**
-*Python Functions
-*Python Lambda
-*Python Classes and Objects
-*Python Inheritance
+
+* Python Functions
+* Python Lambda
+* Python Classes and Objects
+* Python Inheritance
 
 ## Lab 4
 
 **Topics covered in this lab work:**
-*Python Iterators, Generators
-*Python Scope
-*Python Modules
-*Python Dates
-*Python Math
-*Python JSON
+
+* Python Iterators, Generators
+* Python Scope
+* Python Modules
+* Python Dates
+* Python Math
+* Python JSON
 
 ## Lab 5
 
 **Topics covered in this lab work:**
-*Python RegEx
+
+* Python RegEx
 
 ## Lab 6
 
 **Topics covered in this lab work:**
-*Directories and files.
-*Python File Handling: Read, Write, Create and Delete
-*Working with directories
-*Builtin function of python.
+
+* Directories and files.
+* Python File Handling: Read, Write, Create and Delete
+* Working with directories
+* Builtin function of python.
 
 ## Lab 7
 
-Learn tutorial: <https://nerdparadise.com/programming/pygame>:
-      *Getting Started
-      * Working with Images
-      *Music and Sound Effects
-      * Geometric Drawing
-      *Fonts and Text
-      * More on Input
+### Learn tutorial: <https://nerdparadise.com/programming/pygame>
+
+* Getting Started
+* Working with Images
+* Music and Sound Effects
+* Geometric Drawing
+* Fonts and Text
+* More on Input
 
 1. Create a simple clock application (only with minutes and seconds) which is synchronized with system clock. Use Mickey's right hand as minutes arrow and left - as seconds. For moving Mickey's hands you can use:
       ```pygame.transform.rotate```
