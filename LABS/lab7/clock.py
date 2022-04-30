@@ -23,7 +23,7 @@ def main():
 
     going = True
     fps = pg.time.Clock()
-    
+     
     while going:
         for event in pg.event.get():
             if event.type == pg.QUIT:
