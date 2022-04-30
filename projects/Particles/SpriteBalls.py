@@ -2,25 +2,24 @@
 import pygame as pg
 import PyParticles
 
+'''
+    UNFINISHED
+'''
+
 # Driver code
 def main():
     # Setting up dimensions and screen
     dim = W, H = 400 * 3, 300 * 2
     scr = pg.display.set_mode(dim)
-    pg.display.set_caption("Particles! G for gravity and ENTER or BACKSPACE to add/remove")
+    pg.display.set_caption("Particles Simulator!")
     
     # Set up background and menu
     menu = pg.image.load('images/Menu.jpg').convert()
     
-    # Set up environment
-    env = PyParticles.Environment(W, H)
-    
-    # Add some particles to the environment
-    env.addParticles(10)
-    
     # Variables
     selected_particle = None        # Variable to store selected particle object
     IsMenu = True                   # Variable to whether blit the menu or not
+    INIT = True                     # Variable to whether reload or initialize everything
     
     # Text to display
     NAME = "Particles simulator!"
@@ -31,6 +30,18 @@ def main():
     Sfont = pg.font.SysFont('georgia', 25, False, True)
     NAME = Bfont.render(NAME, True, (255, 255, 255))
     INST = Sfont.render(INST, True, (255, 255, 255))
+    
+    def init():
+        global env
+        
+        # Set up environment
+        env = PyParticles.Environment(W, H)
+    
+        # Add required functions
+        env.addFunctions(['move', 'accelerate', 'bounce', 'collide'])
+    
+        # Add some particles to the environment
+        env.addParticles(10)
     
     # Main Loop
     fps = pg.time.Clock()
@@ -60,6 +71,11 @@ def main():
         
         # Play if not on menu
         else:
+            # Initialize environment if needed
+            if INIT: 
+                INIT = False
+                init()
+            
             # Loop through the events
             for e in pg.event.get():
                 # Quit
@@ -76,11 +92,6 @@ def main():
                     
                 # Check for key commands
                 elif e.type == pg.KEYDOWN:
-                    # Turn on or off gravity
-                    if e.key == pg.K_g:
-                        env.gravity = 0 if env.gravity else 0.1
-                        env.SaveSettings() 
-                    
                     # Add or Delete particle    
                     if e.key == pg.K_RETURN:
                         env.addParticles()
