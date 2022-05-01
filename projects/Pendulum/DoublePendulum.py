@@ -25,7 +25,7 @@ def addVectors(angle1, length1, angle2, length2):
     return (Angle, Length)
 
 class Rope:
-    def __init__(self, lenght, pivot, ball):
+    def __init__(self, lenght, pivot, ball, color= 0):
         """Class for rope that connects two points
 
         Args:
@@ -38,6 +38,7 @@ class Rope:
         self.x, self.y = pivot[0], pivot[1]
         self.ball = ball
         self.k = 0.001
+        self.color = color
         
     def restore(self):
         """Function to create the restoring force of the spring defined by Hooke's law
@@ -56,7 +57,7 @@ class Rope:
         Args:
             screen (Pygame Surface): The screen on which the rope will be displayed on
         """
-        pg.draw.line(screen, 0, (self.x, self.y), (self.ball.x, self.ball.y), 2)
+        pg.draw.line(screen, self.color, (self.x, self.y), (self.ball.x, self.ball.y), 2)
         
         
 class Ball:
@@ -150,7 +151,7 @@ def main():
     # Setting up dimensions and screen
     dim = W, H = 800, 600
     scr = pg.display.set_mode(dim)
-    pg.display.set_caption("Simple Pendulum on Spring!")
+    pg.display.set_caption("Double Pendulum on Springs!")
     
     # Set up background
     bcg = pg.image.load('images/bcg.jpg').convert()
@@ -159,13 +160,17 @@ def main():
     # Create the ball and rope objects
     ball = Ball('Ball.png', 50)
     rope = Rope(100, (W / 2, 50), ball)
+    ball2 = Ball('Ball.png', 50)
+    ball2.x, ball2.y = 300, 300
+    rope2 = Rope(100, (ball.x, ball.y), ball2, (255, 255, 255))
     
     # Variables
-    Move = False
+    Move1 = False
+    Move2 = False
     
     # Constants
     AIR_FRICTION = 0.999
-    GRAVITY = math.pi, 9.8 / 60
+    GRAVITY = math.pi, 0
     
     # Main Loop
     fps = pg.time.Clock()
@@ -178,25 +183,37 @@ def main():
                 going = False
             
             if e.type == pg.MOUSEBUTTONDOWN:
-                Move = True
+                if ball.rect.collidepoint(pg.mouse.get_pos()):
+                    Move1 = True
+                if ball2.rect.collidepoint(pg.mouse.get_pos()):
+                    Move2 = True
             
             if e.type == pg.MOUSEBUTTONUP:
-                Move = False
+                Move1 = False
+                Move2 = False
                 
-        if Move: ball.MouseMove(pg.mouse.get_pos())
+        if Move1: ball.MouseMove(pg.mouse.get_pos())
+        if Move2: ball2.MouseMove(pg.mouse.get_pos())
         
         # Update the objects position and other attributes
         ball.bounce(W, H)
         ball.accelerate(GRAVITY)
         ball.move(AIR_FRICTION)
+        ball2.bounce(W, H)
+        ball2.accelerate(GRAVITY)
+        ball2.move(AIR_FRICTION)
         rope.restore()
+        rope2.restore()
+        rope2.x, rope2.y = ball.x, ball.y
         
         # Blit the background
         scr.blit(bcg, (0, 0))
         
         # Blit the objects
         ball.blit(scr)
+        ball2.blit(scr)
         rope.draw(scr)
+        rope2.draw(scr)
         
         # Tick and flip
         pg.display.flip()
