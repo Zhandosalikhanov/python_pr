@@ -2,9 +2,7 @@
 import pygame as pg
 import math
 
-# Function to add two vectors
 def addVectors(angle1, length1, angle2, length2):
-    # Calculate position of the new vector
     """Function to add two vectors
 
     Args:
@@ -57,7 +55,6 @@ class Rope:
             screen (Pygame Surface): The screen on which the rope will be displayed on
         """
         pg.draw.line(screen, 0, (self.x, self.y), (self.ball.x, self.ball.y), 2)
-        
         
 class Ball:
     """Class to create a ball with the given image and size"""
@@ -144,13 +141,12 @@ class Ball:
         self.rect.center = (self.x, self.y)
         screen.blit(self.image, self.rect)
     
-
 # Driver code
 def main():
     # Setting up dimensions and screen
     dim = W, H = 800, 600
     scr = pg.display.set_mode(dim)
-    pg.display.set_caption("Simple Pendulum on Spring!")
+    pg.display.set_caption("Simple Pendulum on Spring! Use Mouse to pick up")
     
     # Set up background
     bcg = pg.image.load('images/bcg.jpg').convert()
@@ -195,8 +191,8 @@ def main():
         scr.blit(bcg, (0, 0))
         
         # Blit the objects
-        ball.blit(scr)
         rope.draw(scr)
+        ball.blit(scr)
         
         # Tick and flip
         pg.display.flip()

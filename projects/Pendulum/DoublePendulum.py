@@ -2,9 +2,7 @@
 import pygame as pg
 import math
 
-# Function to add two vectors
 def addVectors(angle1, length1, angle2, length2):
-    # Calculate position of the new vector
     """Function to add two vectors
 
     Args:
@@ -58,7 +56,6 @@ class Rope:
             screen (Pygame Surface): The screen on which the rope will be displayed on
         """
         pg.draw.line(screen, self.color, (self.x, self.y), (self.ball.x, self.ball.y), 2)
-        
         
 class Ball:
     """Class to create a ball with the given image and size"""
@@ -145,13 +142,12 @@ class Ball:
         self.rect.center = (self.x, self.y)
         screen.blit(self.image, self.rect)
     
-
 # Driver code
 def main():
     # Setting up dimensions and screen
     dim = W, H = 800, 600
     scr = pg.display.set_mode(dim)
-    pg.display.set_caption("Double Pendulum on Springs!")
+    pg.display.set_caption("Double Pendulum on Springs! Press W to create walls and Mouse to control")
     
     # Set up background
     bcg = pg.image.load('images/bcg.jpg').convert()
@@ -163,14 +159,16 @@ def main():
     ball2 = Ball('Ball.png', 50)
     ball2.x, ball2.y = 300, 300
     rope2 = Rope(100, (ball.x, ball.y), ball2, (255, 255, 255))
+    rope3 = Rope(100, (ball2.x, ball2.y), ball, (255, 255, 255))
     
     # Variables
     Move1 = False
     Move2 = False
+    Boundary = False
     
     # Constants
-    AIR_FRICTION = 0.999
-    GRAVITY = math.pi, 0
+    AIR_FRICTION = 0.996
+    GRAVITY = math.pi, 0.1
     
     # Main Loop
     fps = pg.time.Clock()
@@ -192,28 +190,35 @@ def main():
                 Move1 = False
                 Move2 = False
                 
+            if e.type == pg.KEYDOWN and e.key == pg.K_w:
+                Boundary = not Boundary
+                
         if Move1: ball.MouseMove(pg.mouse.get_pos())
         if Move2: ball2.MouseMove(pg.mouse.get_pos())
         
         # Update the objects position and other attributes
-        ball.bounce(W, H)
+        if Boundary:
+            ball.bounce(W, H)
+            ball2.bounce(W, H)
         ball.accelerate(GRAVITY)
         ball.move(AIR_FRICTION)
-        ball2.bounce(W, H)
         ball2.accelerate(GRAVITY)
         ball2.move(AIR_FRICTION)
         rope.restore()
         rope2.restore()
+        rope3.restore()
+        rope3.x, rope3.y = ball2.x, ball2.y
         rope2.x, rope2.y = ball.x, ball.y
         
         # Blit the background
         scr.blit(bcg, (0, 0))
         
         # Blit the objects
-        ball.blit(scr)
-        ball2.blit(scr)
         rope.draw(scr)
         rope2.draw(scr)
+        rope3.draw(scr)
+        ball.blit(scr)
+        ball2.blit(scr)
         
         # Tick and flip
         pg.display.flip()
