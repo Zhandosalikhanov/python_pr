@@ -215,7 +215,7 @@ def execute(command, **kargs):
         C.path    = kargs.get('path', None)
         
         call = {
-            'create'    : C.select,
+            'create'    : C.create,
             'insert'    : C.insert,
             'delete'    : C.delete,
             'select_pag': C.select,
